@@ -1,15 +1,18 @@
 import Boton from "./components/Boton";
+import { useState } from "react";
+import Juego from "./components/Juego";
 
 function App() {
+  const [showGame, setShowGame] = useState(false);
 
-  function startGame () {
-    
+  function handleClick() {
+    setShowGame(true);
   }
 
   return (
     <>
       <main className="flex justify-center items-center bg-cyan-900 text-slate-100 h-screen">
-        <Boton onClick={startGame}>Jugar</Boton>
+        {!showGame ? <Boton onClick={handleClick}>Jugar</Boton> : <Juego />}
       </main>
     </>
   );
