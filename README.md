@@ -1,4 +1,4 @@
-##Aimlab-The-Game
+# Aimlab-The-Game
 
 Un pequeño juego para mejorar reflejos y puntería hecho con React y Tailwind para los estilos.
 
