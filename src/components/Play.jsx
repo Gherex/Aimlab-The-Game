@@ -1,49 +1,56 @@
 import { useState, useEffect } from "react";
 import Circulo from "./Circulo";
 
-function Play() {
-  const [puntos, setPuntos] = useState(0); // Maneja el puntaje
-  const [circuloVisible, setCirculoVisible] = useState(false); // Controla si el círculo está visible
-  const [posicion, setPosicion] = useState({ x: 100, y: 100 }); // Posición inicial del círculo
-  const [puedeSumarPunto, setPuedeSumarPunto] = useState(false); // Controla si puede sumar puntos al hacer click
+function Play({ cantidadObjetivos, velocidad }) {
+  const [puntos, setPuntos] = useState(0);
+  const [circuloVisible, setCirculoVisible] = useState(false);
+  const [posicion, setPosicion] = useState({ x: 100, y: 100 });
+  const [puedeSumarPunto, setPuedeSumarPunto] = useState(false);
+  const [objetivosRestantes, setObjetivosRestantes] =
+    useState(cantidadObjetivos);
 
-  // Función que se llama cuando se hace clic en el círculo
   const handleCirculoClick = () => {
     if (puedeSumarPunto) {
-      setPuntos(puntos + 1); // Aumenta el puntaje solo si el círculo está visible
-      setPuedeSumarPunto(false); // Evitamos que se pueda sumar más de un punto por clic
+      setPuntos(puntos + 1);
+      setPuedeSumarPunto(false);
     }
   };
 
-  // Función para generar una nueva posición aleatoria en la pantalla
   const generarPosicionAleatoria = () => {
-    const x = Math.floor(Math.random() * (window.innerWidth - 64)); // 64 es el ancho del círculo
-    const y = Math.floor(Math.random() * (window.innerHeight - 64)); // 64 es el alto del círculo
+    const x = Math.floor(Math.random() * (window.innerWidth - 64));
+    const y = Math.floor(Math.random() * (window.innerHeight - 64));
     setPosicion({ x, y });
-    setCirculoVisible(true); // Hace visible el nuevo círculo
-    setPuedeSumarPunto(true); // Permitimos que se pueda sumar un punto si se hace clic
+    setCirculoVisible(true);
+    setPuedeSumarPunto(true);
   };
 
   // Efecto para manejar la aparición y desaparición del círculo automáticamente
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      if (circuloVisible) {
-        setCirculoVisible(false); // Oculta el círculo
-        setPuedeSumarPunto(false); // Reseteamos para que no se sume punto si no se hizo clic
-      } else {
-        generarPosicionAleatoria(); // Genera una nueva posición y hace visible el círculo
-      }
-    }, 1000); // Intervalo de 500ms para la aparición/desaparición
+    if (objetivosRestantes > 0) {
+      const intervalId = setInterval(() => {
+        if (circuloVisible) {
+          setCirculoVisible(false); // Oculta el círculo
+          setPuedeSumarPunto(false); // Reseteamos para que no se sume punto si no se hizo clic
+        } else {
+          generarPosicionAleatoria(); // Genera una nueva posición y hace visible el círculo
+          setObjetivosRestantes((prev) => prev - 1);
+        }
+      }, velocidad);
 
-    return () => clearInterval(intervalId); // Limpiar intervalo al desmontar el componente
-  }, [circuloVisible]);
+      return () => clearInterval(intervalId); // Limpiar intervalo al desmontar el componente
+    }
+  }, [circuloVisible, velocidad, objetivosRestantes]);
 
   return (
     <div className="w-screen h-screen bg-gray-800 relative flex flex-col items-center justify-center">
-      <h1 className="text-white text-3xl mb-4 select-none">Puntaje: {puntos}</h1>
-
-      {circuloVisible && (
-        <Circulo onClick={handleCirculoClick} x={posicion.x} y={posicion.y} />
+      {objetivosRestantes > 0 ? (
+        circuloVisible && (
+          <Circulo onClick={handleCirculoClick} x={posicion.x} y={posicion.y} />
+        )
+      ) : (
+        <p className="text-white text-2xl">
+          ¡Juego terminado! Puntaje final: {puntos}
+        </p>
       )}
     </div>
   );

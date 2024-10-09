@@ -4,8 +4,11 @@ import Juego from "./components/Juego";
 
 function App() {
   const [showGame, setShowGame] = useState(false);
+  const [cantidadObjetivos, setCantidadObjetivos] = useState(10);
+  const [velocidad, setVelocidad] = useState(1000);
 
-  function handleClick() {
+  function handleClick(e) {
+    e.preventDefault();
     setShowGame(true);
   }
 
@@ -23,7 +26,7 @@ function App() {
                 e
               </span>
             </h1>
-            <div className="p-4 mb-4 flex space-x-10">
+            <form className="p-4 mb-4 flex space-x-10">
               <label className="select-none text-xl">
                 Cantidad de objetivos:
                 <input
@@ -31,6 +34,8 @@ function App() {
                   min="10"
                   max="100"
                   step="5"
+                  value={cantidadObjetivos}
+                  onChange={(e) => setCantidadObjetivos(e.target.value)}
                   className="text-blue-100 ml-2 text-2xl p-2 w-20 bg-cyan-800 outline-none rounded-lg"
                 />
               </label>
@@ -41,14 +46,16 @@ function App() {
                   min="100"
                   max="2000"
                   step="100"
+                  value={velocidad}
+                  onChange={(e) => setVelocidad(e.target.value)}
                   className="text-blue-100 ml-2 text-2xl p-2 w-24 bg-cyan-800 outline-none rounded-lg"
                 />
               </label>
-            </div>
-            <Boton onClick={handleClick}>Jugar</Boton>
+              <Boton onClick={handleClick}>Jugar</Boton>
+            </form>
           </>
         ) : (
-          <Juego />
+          <Juego cantidadObjetivos={cantidadObjetivos} velocidad={velocidad} />
         )}
       </main>
     </>

@@ -2,7 +2,7 @@ import { useState } from "react";
 import CuentaRegresiva from "./CuentaRegresiva";
 import Play from "./Play";
 
-function Juego() {
+function Juego({ cantidadObjetivos, velocidad }) {
   const [mostrarJuego, setMostrarJuego] = useState(false);
 
   const handleCuentaRegresivaFinish = () => {
@@ -14,7 +14,7 @@ function Juego() {
       {!mostrarJuego ? (
         <CuentaRegresiva onFinish={handleCuentaRegresivaFinish} />
       ) : (
-        <Play />
+        <Play cantidadObjetivos={cantidadObjetivos} velocidad={velocidad} />
       )}
     </div>
   );
